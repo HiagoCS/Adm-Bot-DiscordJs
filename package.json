@@ -1,0 +1,23 @@
+{
+  "name": "server-moderator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiagoCS/Adm-Bot-DiscordJs.git"
+  },
+  "author": "HiagoCS",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HiagoCS/Adm-Bot-DiscordJs/issues"
+  },
+  "homepage": "https://github.com/HiagoCS/Adm-Bot-DiscordJs#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0"
+  }
+}
