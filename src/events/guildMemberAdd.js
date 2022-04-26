@@ -15,10 +15,6 @@ module.exports = {
 }
 
 function setNickname(bot, member, cChannel){
-	const setNickEmbed = {
-		title: `MFB - Monkey's from the beach`,
-		description: `Digite o apelido desejado...`
-	}
 	embeds.defaultEmbed.description = `Quer definir um apelido no servidor ?`;
 	cChannel.send({embeds:[embeds.defaultEmbed], components:[YesNo]})
 		.then(msg =>{
