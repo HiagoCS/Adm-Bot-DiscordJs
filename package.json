@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/HiagoCS/Adm-Bot-DiscordJs#readme",
   "dependencies": {
+    "@iamtraction/google-translate": "^1.1.2",
     "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "google-translate-api": "^2.3.0"
   }
 }
