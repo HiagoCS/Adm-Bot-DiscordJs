@@ -2,6 +2,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const Discord = require('discord.js');
+const botConfig = require('./src/JSON/config.json');
 
 //Create Client (bot)
 const bot = new Discord.Client({
@@ -68,6 +69,5 @@ bot.on('messageCreate', (msg) =>{
 	}
 });
 bot.on("guildMemberAdd", (member) =>{
-	const cChannel = member.guild.channels.cache.find(c => c.id === '854100641172160522');
-	bot.events.get("guildMemberAdd").run(bot, member, cChannel);
+	bot.events.get("guildMemberAdd").run(bot, member, member.guild.channels.cache.find(c => c.id === botConfig.channels_id.cChannel));
 });

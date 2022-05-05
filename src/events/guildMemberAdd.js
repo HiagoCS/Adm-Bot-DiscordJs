@@ -1,6 +1,10 @@
 const Discord = require('discord.js');
 const YesNo = require('../btnExports/yesno.js');
-const embeds = require('../JSOn/embeds.json');
+const embeds = require('../JSON/embeds.json');
+const botConfig = require('../JSON/config.json');
+const Canvas = require('canvas');
+const fs  = require('fs');
+const path = require('path');
 module.exports = {
 	name: "guildMemberAdd",
 	run: (bot, member, cChannel) =>{
@@ -24,12 +28,20 @@ function setNickname(bot, member, cChannel){
 				.then(btn =>{
 					msg.delete();
 					if(btn.customId == 'yes'){
+						cChannel.permissionOverwrites.create(
+							member.guild.roles.cache.find(r => r.name.toLowerCase() === 'humano'),
+							{SEND_MESSAGES:true}
+						).catch(e => console.log(e));
 						embeds.defaultEmbed.title = `Digite o apelido desejado...`;
 						cChannel.send({embeds:[embeds.defaultEmbed]})
 							.then(msg =>{
 								const filter = b => b.author.id === member.user.id;
 								cChannel.awaitMessages({filter, max:1})
 									.then(nickname =>{
+										cChannel.permissionOverwrites.create(
+											member.guild.roles.cache.find(r => r.name.toLowerCase() === 'humano'),
+											{SEND_MESSAGES:false}
+										).catch(e => console.log(e));
 										msg.delete();
 										const confirmNick = {
 											title: `**${nickname.first().content}**`,
@@ -146,4 +158,43 @@ function finalConfig(bot, member, cChannel){
 	cChannel.send({embeds:[embeds.defaultEmbed]});
 	member.roles.remove(member.guild.roles.cache.find(r => r.name.toLowerCase() === 'humano').id);
 	member.roles.add(member.guild.roles.cache.find(r => r.name.toLowerCase() === 'miquinho').id);
+
+	welcomeImage(bot, member, member.guild.channels.cache.find(c => c.id === botConfig.channels_id.wChannel));
+}
+function welcomeImage(bot, member, wChannel){
+	const readImg = fs.readFileSync(path.join(__dirname, 'bckimg.jpg'));
+	let key = {};
+	key.create = Canvas.createCanvas(1024, 500);
+	key.context = key.create.getContext('2d');
+	key.context.font = '72px sans-serif';
+	key.context.fillStyle = '#ffffff';
+
+	Canvas.loadImage(readImg).then(img =>{
+		key.context.drawImage(img, 0, 0, 1024, 500);
+		key.context.beginPath();
+		key.context.stroke();
+		key.context.fill();
+
+		key.context.font = '900 60px Arial';
+		key.context.textAlign = 'center';
+		key.context.strokeStyle = 'black';
+		key.context.lineWidth = 8;
+		key.context.strokeText(`${member.user.username}#${member.user.discriminator}`, 512, 100);
+		key.context.fillStyle = 'white';
+		key.context.fillText(`${member.user.username}#${member.user.discriminator}`, 512, 100);	
+		key.context.beginPath();
+		key.context.arc(521, 240, 119, 0, Math.PI * 2, true);
+		key.context.stroke();
+		key.context.closePath();
+		key.context.clip();
+
+		Canvas.loadImage(member.user.displayAvatarURL({format: 'png', size: 1024})).then(uImg =>{
+			key.context.drawImage(uImg, 400, 120, 240, 240);
+			let msg = new Discord.MessageAttachment(key.create.toBuffer(), `${member.user.username}.png`);
+
+			wChannel.send({files:[msg]}).catch(e =>{
+				console.log(e);
+			});
+		}).catch(err =>{console.log(err)});
+	}).catch(err =>{console.log(err)});
 }
