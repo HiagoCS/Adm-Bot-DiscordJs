@@ -68,6 +68,12 @@ bot.on('messageCreate', (msg) =>{
 			commandFile.run(bot, msg, args.toString());
 	}
 });
+/*
 bot.on("guildMemberAdd", (member) =>{
 	bot.events.get("guildMemberAdd").run(bot, member, member.guild.channels.cache.find(c => c.id === botConfig.channels_id.cChannel));
+});
+*/
+
+bot.on("guildMemberRemove", (member) =>{
+	bot.events.get("guildMemberRemove").run(bot, member, member.guild.channels.cache.find(c => c.id === botConfig.channels_id.eChannel))
 });
